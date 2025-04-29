@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/microai-benchmark-tracker/static/css/main.083ba9a5.css",
-    "main.js": "/microai-benchmark-tracker/static/js/main.86676ea4.js",
+    "main.js": "/microai-benchmark-tracker/static/js/main.79ea54b7.js",
     "static/js/453.3adb4c7c.chunk.js": "/microai-benchmark-tracker/static/js/453.3adb4c7c.chunk.js",
     "index.html": "/microai-benchmark-tracker/index.html",
     "main.083ba9a5.css.map": "/microai-benchmark-tracker/static/css/main.083ba9a5.css.map",
-    "main.86676ea4.js.map": "/microai-benchmark-tracker/static/js/main.86676ea4.js.map",
+    "main.79ea54b7.js.map": "/microai-benchmark-tracker/static/js/main.79ea54b7.js.map",
     "453.3adb4c7c.chunk.js.map": "/microai-benchmark-tracker/static/js/453.3adb4c7c.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.083ba9a5.css",
-    "static/js/main.86676ea4.js"
+    "static/js/main.79ea54b7.js"
   ]
 }
