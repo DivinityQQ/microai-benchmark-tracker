@@ -88,10 +88,31 @@ function App() {
     return data;
   };
 
+  // Merge saved data with current template to handle new boards/benchmarks
+  const mergeTrackingData = (savedData) => {
+    const currentData = initializeTrackingData();
+    
+    // Start with current template with all boards and benchmarks
+    const mergedData = {...currentData};
+    
+    // Copy over values from saved data where they exist
+    for (const board in savedData) {
+      if (mergedData[board]) {
+        for (const benchmark in savedData[board]) {
+          if (mergedData[board][benchmark]) {
+            mergedData[board][benchmark] = savedData[board][benchmark];
+          }
+        }
+      }
+    }
+    
+    return mergedData;
+  };
+
   const [trackingData, setTrackingData] = useState(() => {
     // Try to load data from localStorage
     const savedData = localStorage.getItem('benchmarkTrackingData');
-    return savedData ? JSON.parse(savedData) : initializeTrackingData();
+    return savedData ? mergeTrackingData(JSON.parse(savedData)) : initializeTrackingData();
   });
   
   const [activeBoard, setActiveBoard] = useState(boards[0]);
@@ -123,6 +144,7 @@ function App() {
     });
 
     setTotalStatus({ notStarted, collected, unableToRun });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trackingData]);
 
   // Handle status change
@@ -156,15 +178,28 @@ function App() {
     return 'white';
   };
 
-  // Save data to JSON file
+  // Format date for filename
+  const formatDateForFilename = () => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    
+    return `${year}-${month}-${day}_${hours}-${minutes}`;
+  };
+
+  // Save data to JSON file with timestamp in filename
   const exportData = () => {
     const jsonData = JSON.stringify(trackingData, null, 2);
     const blob = new Blob([jsonData], { type: 'application/json' });
     const href = URL.createObjectURL(blob);
+    const timestamp = formatDateForFilename();
     
     const link = document.createElement('a');
     link.href = href;
-    link.download = "benchmark_tracking_data.json";
+    link.download = `benchmark_tracking_data_${timestamp}.json`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -179,7 +214,7 @@ function App() {
     reader.onload = (e) => {
       try {
         const importedData = JSON.parse(e.target.result);
-        setTrackingData(importedData);
+        setTrackingData(mergeTrackingData(importedData));
       } catch (error) {
         alert('Failed to parse the imported file. Please make sure it\'s a valid JSON file.');
       }
